@@ -12,13 +12,9 @@ Quickly copy and paste harvester configurations
 **TODO:**
 
 - Paste functionality improvments
-  - find null values using extra testtttt harvester (empty harvester with just name)
   - change the way the harvesterID is passed for code structure
   - set other fields to remove? 
-  - didnt implement:
-    - def sync
-    - ignore dupe urls
-    - notes
+  - add note?
 - partial paste
   - select what items to be pasted
 - Style extension popout

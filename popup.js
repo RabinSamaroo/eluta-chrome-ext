@@ -83,6 +83,11 @@ function inject_harvester_code(config, pasteURL) {
     '";';
 
   // Def sync
+  code +=
+    'document.getElementsByName("default_harvester_sync_mode_id")[0].value="' +
+    cfg.default_harvester_sync_mode_id +
+    '";';
+
   // Test pager url
   code += 'document.getElementsByName("test_pager_url")[0].value="';
   if (cfg.test_pager_url != null) {
@@ -253,6 +258,11 @@ function inject_harvester_code(config, pasteURL) {
     '";';
 
   // Ignore dupe URLs
+  code += 'document.getElementsByName("ignore_duplicate_urls")[0].checked="';
+  if (cfg.unique_months) {
+    code += "checked";
+  }
+  code += '";';
 
   // Pre Reject
   code += 'document.getElementsByName("pre_parse_reject")[0].value="';
