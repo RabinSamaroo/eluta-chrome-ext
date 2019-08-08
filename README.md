@@ -11,11 +11,15 @@ Quickly copy and paste harvester configurations
 
 **TODO:**
 
-- **Implement paste functionality**
+- Paste functionality improvments
+  - change the way the harvesterID is passed for code structure
+  - set other fields to remove? 
+  - add note?
 - partial paste
   - select what items to be pasted
 - Style extension popout
 - Favourites menu! - use sync storage
 - ATS generator based on url
+  - copy from empty harvester and make changes
 - Eluta pages recolour
 - Count jobs for editors?
