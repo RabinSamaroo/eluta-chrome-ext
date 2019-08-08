@@ -7,22 +7,29 @@ document
   .addEventListener("click", paste_harvester, false);
 
 function copy_harvester() {
-  //select active tab
+  // select active tab
   chrome.tabs.query({ active: true }, function(tabs) {
     var tab = tabs[0];
 
-    //execute script on active tab
+    // execute script on active tab
     chrome.tabs.executeScript(
       tab.id,
       {
-        code: "document.documentElement.innerText" //gets text content
+        code: "document.documentElement.innerText" // gets text content
       },
       function(json) {
-        chrome.storage.local.set({ selected: json }); //places text content in extension local storage
+        chrome.storage.local.set({ selected: json }); // places text content in extension local storage
         document.getElementById("log").innerText = "Copied!";
       }
     );
   });
+}
+
+function escape_quotes(string) {
+  //escapes quotes so the code string will not be cut off by a quote in the code
+  string = string.replace(/\"/g, '\\"');
+  string = string.replace(/\'/g, "\\'");
+  return string;
 }
 
 // Returns a string of code to be executed by the tab to inject the data
@@ -30,29 +37,227 @@ function copy_harvester() {
 function inject_harvester_code(config) {
   var cfg = JSON.parse(config);
   code = "";
-  code +=
-    'document.getElementsByName("test_url")[0].value="' + cfg.test_url + '";';
 
+  // FIELDS WITH QUOTES => TEST URL, TEST P URL, PAT ID, PATURL, ITEM PARSER FIELDS
+  // Test url
+  code +=
+    'document.getElementsByName("test_url")[0].value="' +
+    escape_quotes(cfg.test_url) +
+    '";';
+
+  // Def sync
+  // Test pager url
   code += 'document.getElementsByName("test_pager_url")[0].value="';
   if (cfg.test_pager_url != null) {
-    code += cfg.test_pager_url;
+    code += escape_quotes(cfg.test_pager_url);
   }
   code += '";';
 
+  // pager max #
   code +=
     'document.getElementsByName("pager_max")[0].value="' + cfg.pager_max + '";';
 
+  // row error
+  code +=
+    'document.getElementsByName("max_row_errors")[0].value="' +
+    cfg.max_row_errors +
+    '";';
+
+  // list parser
+  code +=
+    'document.getElementsByName("list_parser")[0].value="' +
+    cfg.list_parser +
+    '";';
+
+  // 1st Page
+  code +=
+    'document.getElementsByName("pager_offset")[0].value="' +
+    cfg.pager_offset +
+    '";';
+
+  // pager step
+  code +=
+    'document.getElementsByName("pager_step")[0].value="' +
+    cfg.pager_step +
+    '";';
+
+  // List type
+  code +=
+    'document.getElementsByName("list_type")[0].value="' + cfg.list_type + '";';
+
+  // List Begin
+  code += 'document.getElementsByName("list_begin")[0].value="';
+  if (cfg.list_begin != null) {
+    code += cfg.list_begin;
+  }
+  code += '";';
+
+  // List End
+  code += 'document.getElementsByName("list_end")[0].value="';
+  if (cfg.list_end != null) {
+    code += cfg.list_end;
+  }
+  code += '";';
+
+  // List header
+  code += 'document.getElementsByName("header_idstr")[0].value="';
+  if (cfg.header_idstr != null) {
+    code += cfg.header_idstr;
+  }
+  code += '";';
+
+  // Table #
+  code += 'document.getElementsByName("list_table_number")[0].value="';
+  if (cfg.list_table_number != null) {
+    code += cfg.list_table_number;
+  }
+  code += '";';
+
+  // Head Rows
+  code +=
+    'document.getElementsByName("header_rows")[0].value="' +
+    cfg.header_rows +
+    '";';
+
+  // Expected Rows
+  code += 'document.getElementsByName("list_expect")[0].value="';
+  if (cfg.list_expect != null) {
+    code += cfg.list_expect;
+  }
+  code += '";';
+
+  // Column ID
+  code += 'document.getElementsByName("jobid_column")[0].value="';
+  if (cfg.jobid_column) {
+    code += cfg.jobid_column;
+  }
+  code += '";';
+
+  // Column Link
+  code += 'document.getElementsByName("joburl_column")[0].value="';
+  if (cfg.joburl_column) {
+    code += cfg.joburl_column;
+  }
+  code += '";';
+
+  // Column Title
+  code += 'document.getElementsByName("position_title_column")[0].value="';
+  if (cfg.position_title_column) {
+    code += cfg.position_title_column;
+  }
+  code += '";';
+
+  // Column Location
+  code += 'document.getElementsByName("location_column")[0].value="';
+  if (cfg.location_column) {
+    code += cfg.location_column;
+  }
+  code += '";';
+
+  // Column Pub Date - element name has leading newline
+  code += 'document.getElementsByName("\\npublished_ts_column")[0].value="';
+  if (cfg.published_ts_column) {
+    code += cfg.published_ts_column;
+  }
+  code += '";';
+
+  // Pattern ID
+  code += 'document.getElementsByName("id_regex")[0].value="';
+  if (cfg.id_regex != null) {
+    code += escape_quotes(cfg.id_regex);
+  }
+  code += '";';
+
+  // Pat. URL
+  code += 'document.getElementsByName("link_pattern")[0].value="';
+  if (cfg.link_pattern != null) {
+    code += escape_quotes(cfg.link_pattern);
+  }
+  code += '";';
+
+  // Row Reject
+  code += 'document.getElementsByName("list_reject")[0].value="';
+  if (cfg.list_reject != null) {
+    code += escape_quotes(cfg.list_reject);
+  }
+  code += '";';
+
+  // Row Require
+  code += 'document.getElementsByName("list_require")[0].value="';
+  if (cfg.list_require != null) {
+    code += escape_quotes(cfg.list_require);
+  }
+  code += '";';
+
+  // Page Reject
+  code += 'document.getElementsByName("list_page_require")[0].value="';
+  if (cfg.list_page_require != null) {
+    code += escape_quotes(cfg.list_page_require);
+  }
+  code += '";';
+
+  // Page Require
+  code += 'document.getElementsByName("list_page_reject")[0].value="';
+  if (cfg.list_page_reject != null) {
+    code += escape_quotes(cfg.list_page_reject);
+  }
+  code += '";';
+
+  // Item Parser
+  code +=
+    'document.getElementsByName("item_parser")[0].value="' +
+    cfg.item_parser +
+    '";';
+
+  // Unique
+  code +=
+    'document.getElementsByName("unique_months:int")[0].value="' +
+    cfg.unique_months +
+    '";';
+
+  // Ignore dupe URLs
+
+  // Pre Reject
+  code += 'document.getElementsByName("pre_parse_reject")[0].value="';
+  if (cfg.pre_parse_reject != null) {
+    code += escape_quotes(cfg.pre_parse_reject);
+  }
+  code += '";';
+
+  // Cookie URL
+  code += 'document.getElementsByName("cookie_req")[0].value="';
+  if (cfg.cookie_req != null) {
+    code += escape_quotes(cfg.cookie_req);
+  }
+  code += '";';
+
+  // Item Begin
+  code += 'document.getElementsByName("item_begin")[0].value="';
+  if (cfg.item_begin != null) {
+    code += escape_quotes(cfg.item_begin);
+  }
+  code += '";';
+
+  // Item End
+  code += 'document.getElementsByName("item_end")[0].value="';
+  if (cfg.item_end != null) {
+    code += escape_quotes(cfg.item_end);
+  }
+  code += '";';
+
+  // Notes
+  // ITEM PARSER
   return code;
 }
 
 function paste_harvester() {
-  //select active tab
+  // select active tab
   chrome.tabs.query({ active: true }, function(tabs) {
     var tab = tabs[0];
 
     chrome.storage.local.get("selected", function(result) {
       // fetch data from storage
-      //inject data on active tab
+      // inject data on active tab
       chrome.tabs.executeScript(tab.id, {
         code: inject_harvester_code(result.selected)
       });

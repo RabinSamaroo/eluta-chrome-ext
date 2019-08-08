@@ -14,10 +14,15 @@ Quickly copy and paste harvester configurations
 - **Implement paste functionality**
   - find null values using extra testtttt harvester (empty harvester with just name)
   - use .value on a dropdownbox with the corrosponding option value
+  - didnt implement:
+    - def sync
+    - ignore dupe urls
+    - notes
 - partial paste
   - select what items to be pasted
 - Style extension popout
 - Favourites menu! - use sync storage
 - ATS generator based on url
+  - copy from empty harvester and make changes
 - Eluta pages recolour
 - Count jobs for editors?
