@@ -11,9 +11,10 @@ Quickly copy and paste harvester configurations
 
 **TODO:**
 
-- **Implement paste functionality**
+- Paste functionality improvments
   - find null values using extra testtttt harvester (empty harvester with just name)
-  - use .value on a dropdownbox with the corrosponding option value
+  - change the way the harvesterID is passed for code structure
+  - set other fields to remove? 
   - didnt implement:
     - def sync
     - ignore dupe urls
