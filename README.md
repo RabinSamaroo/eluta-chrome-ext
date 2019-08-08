@@ -12,6 +12,8 @@ Quickly copy and paste harvester configurations
 **TODO:**
 
 - **Implement paste functionality**
+  - find null values using extra testtttt harvester (empty harvester with just name)
+  - use .value on a dropdownbox with the corrosponding option value
 - partial paste
   - select what items to be pasted
 - Style extension popout
