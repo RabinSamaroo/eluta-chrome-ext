@@ -10,7 +10,11 @@ document
   .getElementById("workday-copy")
   .addEventListener("click", workday_copy, false);
 
-var workdayURL = document.getElementById("workday-url");
+document
+  .getElementById("ultipro-copy")
+  .addEventListener("click", ultipro_copy, false);
+
+var inputURL = document.getElementById("input-url");
 function rawHarvester() {
   return JSON.parse(`
 {
@@ -91,7 +95,7 @@ function rawItem() {
 
 function workday_copy() {
   //get information from input
-  raw_url = workdayURL.value;
+  raw_url = inputURL.value;
   url = raw_url.match(/https?:\/\/.*?\/.*?\//)[0]; //make this fault tolerent for .com/en-us/external
   pat_url = url + "job/!#!#accept:application/json";
   url =
@@ -142,6 +146,50 @@ function workday_copy() {
   chrome.storage.local.set({ selected: JSON.stringify(workdayHarv) });
   //alert(JSON.stringify(workdayHarv));
   alert("Copied Workday! Change Page number and reject/require rules");
+}
+
+function ultipro_copy() {
+  rawURL = inputURL.value;
+  rawURL = rawURL.match(/https?:\/\/.*?JobBoard\/.*?\//g)[0];
+  test_url = rawURL + "JobBoardView/LoadSearchResults?top=1000";
+  patt_url = rawURL + "OpportunityDetail?opportunityId=!#!";
+
+  ultiproHarv = rawHarvester();
+  ultiproHarv.test_url = test_url;
+  ultiproHarv.link_pattern = patt_url;
+  ultiproHarv.jobid_column = 1;
+  ultiproHarv.joburl_column = 1;
+  ultiproHarv.position_title_column = 2;
+  ultiproHarv.location_column = 5;
+  ultiproHarv.published_ts_column = 7;
+  ultiproHarv.list_parser = "singleregex";
+  ultiproHarv.id_regex =
+    '(?is)Id": "(.*?)".*?title": "(.*?)".*?requisitionnumber": "(.*?)".*?fulltime": (.*?),.*?city": "(.*?)".*?country.*?code": "(.*?)".*?posteddate": "(.*?)"';
+
+  descriptionItem = rawItem();
+  descriptionItem.harvester_field_id = 5;
+  descriptionItem.field_begin = `"Description":"`;
+  descriptionItem.field_end = `",`;
+  descriptionItem.replace = String.raw`\u0026nbsp;=>[[[ ]]]||\u0026ldquo;=>"||\u0026rdquo;=>"||\u0026rsquo;=>'||\u0027=>'||\u0026amp;=>&||\u0026=>[[[ ]]]||\u0022=>[[[ ]]]||\u003E=>>||\u003C=><||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?)\\n=>[[[ ]]]||(?)\\t=>[[[ ]]]||(?)\[\[\[|\]\]\]=>||]]]=>`;
+  ultiproHarv.__itemdef.push(descriptionItem);
+
+  etypeItem = rawItem();
+  etypeItem.harvester_field_id = 27;
+  etypeItem.field_begin = `::column 4::`;
+  etypeItem.field_end = `::.`;
+  etypeItem.replace = `true=>full-time||false=>part-time`;
+  ultiproHarv.__itemdef.push(etypeItem);
+
+  countryItem = rawItem();
+  countryItem.harvester_field_id = 8;
+  countryItem.field_begin = `::column 6::`;
+  countryItem.field_end = `::.`;
+  countryItem.terms_require = `CAN`;
+  ultiproHarv.__itemdef.push(countryItem);
+
+  chrome.storage.local.set({ selected: JSON.stringify(ultiproHarv) });
+
+  alert("Copied Ultipro! Watch out for internation locations");
 }
 
 function escape_quotes(string) {
@@ -448,11 +496,13 @@ function inject_harvester_code(config, pasteURL) {
 
     // Replace
     code +=
-      'document.getElementsByName("' + itemPrefix + '~replace")[0].value="';
+      'document.getElementsByName("' +
+      itemPrefix +
+      '~replace")[0].value=String.raw`';
     if (cfg.__itemdef[item].replace != null) {
       code += escape_quotes(cfg.__itemdef[item].replace);
     }
-    code += '";';
+    code += "`;";
 
     // Validate
     code +=
@@ -506,7 +556,7 @@ function inject_harvester_code(config, pasteURL) {
     }
     code += '";';
   }
-
+  console.log(code);
   return code;
 }
 
