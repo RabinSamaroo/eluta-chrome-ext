@@ -6,23 +6,142 @@ document
   .getElementById("paste-harvester-btn")
   .addEventListener("click", paste_harvester, false);
 
-function copy_harvester() {
-  // select active tab
-  chrome.tabs.query({ active: true }, function(tabs) {
-    var tab = tabs[0];
+document
+  .getElementById("workday-copy")
+  .addEventListener("click", workday_copy, false);
 
-    // execute script on active tab
-    chrome.tabs.executeScript(
-      tab.id,
-      {
-        code: "document.documentElement.innerText" // gets text content
-      },
-      function(json) {
-        chrome.storage.local.set({ selected: json }); // places text content in extension local storage
-        document.getElementById("log").innerText = "Copied!";
-      }
-    );
-  });
+var workdayURL = document.getElementById("workday-url");
+function rawHarvester() {
+  return JSON.parse(`
+{
+  "cookie_req": null,
+  "__farmerID": null,
+  "pager_max": 1,
+  "max_row_errors": 0,
+  "list_table_number": null,
+  "harvester_active": false,
+  "item_begin": null,
+  "list_begin": null,
+  "pager_offset": 1,
+  "__cursor": "<elutalib.zopedbapi.zcursor object at 0x7f47d73eb950>",
+  "__farmID": 11625,
+  "harvester_ts": "2019/08/08 22:30:26.351510 GMT-4",
+  "list_page_reject": null,
+  "header_idstr": null,
+  "list_expect": null,
+  "list_parser": "table",
+  "harvester_id": 11625,
+  "farm_id": 11625,
+  "pre_parse_reject": null,
+  "list_require": null,
+  "harvester_notes": null,
+  "pager_url": null,
+  "link_pattern": null,
+  "ignore_duplicate_urls": false,
+  "id_regex": null,
+  "harvester_name": "extra testttttttttt",
+  "list_end": null,
+  "harvester_debug": false,
+  "item_parser": "stream",
+  "list_columns": null,
+  "header_rows": 1,
+  "__itemdef": [],
+  "list_page_require": null,
+  "harvester_update_ts": "2016/01/14 16:10:9.767357 GMT+0",
+  "parent_harvester_id": null,
+  "list_type": 2,
+  "harvester_sync_mode_id": 0,
+  "test_pager_url": null,
+  "test_url": null,
+  "item_end": null,
+  "pager_step": 1,
+  "url": null,
+  "list_filter": null,
+  "unique_months": 0,
+  "list_reject": null,
+  "default_harvester_sync_mode_id": 0
+}
+`);
+}
+
+function rawItem() {
+  return JSON.parse(`
+    {
+      "field_begin": "",
+      "terms_require": "",
+      "harvester_item_id": 91936,
+      "deleted": false,
+      "terms_reject": "",
+      "harvester_id": 11625,
+      "arbitrary": false,
+      "remove": "",
+      "replace": "",
+      "field": "index_text",
+      "field_end": "",
+      "harvester_field_label": "Description",
+      "harvester_field_handled": true,
+      "variable": false,
+      "position": -2306180,
+      "validate": "",
+      "harvester_field_id": 5,
+      "field_column": null
+    }
+`);
+}
+
+function workday_copy() {
+  //get information from input
+  raw_url = workdayURL.value;
+  url = raw_url.match(/https?:\/\/.*?\/.*?\//)[0]; //make this fault tolerent for .com/en-us/external
+  pat_url = url + "job/!#!#accept:application/json";
+  url =
+    "http://127.0.0.1:3333/js/render?url=" +
+    url +
+    "fs/searchPagination/318c8bb6f553100021d223d9780d30be/";
+  pager_url = url + "!#!";
+  test_url = url + "0";
+
+  workdayHarv = rawHarvester();
+  workdayHarv.test_url = test_url;
+  workdayHarv.test_pager_url = pager_url;
+  workdayHarv.link_pattern = pat_url;
+  workdayHarv.pager_offset = 0;
+  workdayHarv.pager_step = 50;
+  workdayHarv.jobid_column = 1;
+  workdayHarv.joburl_column = 1;
+  workdayHarv.id_regex = "job/([^\"']+)";
+  workdayHarv.list_parser = "singleregex";
+  workdayHarv.pager_max = "SET";
+
+  titleItem = rawItem();
+  titleItem.harvester_field_id = 13;
+  titleItem.field_begin =
+    '"richTextArea.jobPosting.title","propertyName":"None","enabled":false,"text":"';
+  titleItem.field_end = '"';
+  workdayHarv.__itemdef.push(titleItem);
+
+  locationItem = rawItem();
+  locationItem.harvester_field_id = 9;
+  locationItem.field_begin = '"iconName":"LOCATION","imageLabel":"';
+  locationItem.field_end = '"';
+  workdayHarv.__itemdef.push(locationItem);
+
+  descriptionItem = rawItem();
+  descriptionItem.harvester_field_id = 5;
+  descriptionItem.field_begin =
+    'ecid":"richTextArea.jobPosting.jobDescription","propertyName":"None","text":"';
+  descriptionItem.field_end = '","value"';
+  workdayHarv.__itemdef.push(descriptionItem);
+
+  etypeItem = rawItem();
+  etypeItem.harvester_field_id = 27;
+  etypeItem.field_begin = ',"iconName":"JOB_TYPE","imageLabel":"';
+  etypeItem.field_end = '"';
+  workdayHarv.__itemdef.push(etypeItem);
+
+  chrome.storage.local.set({ selected: JSON.stringify(workdayHarv) });
+  //alert(JSON.stringify(workdayHarv));
+  alert("Copied Workday! Change Page number and reject/require rules");
 }
 
 function escape_quotes(string) {
@@ -402,5 +521,24 @@ function paste_harvester() {
         code: inject_harvester_code(result.selected, tab.url) //consider changing the way tab.url is passed
       });
     });
+  });
+}
+
+function copy_harvester() {
+  // select active tab
+  chrome.tabs.query({ active: true }, function(tabs) {
+    var tab = tabs[0];
+
+    // execute script on active tab
+    chrome.tabs.executeScript(
+      tab.id,
+      {
+        code: "document.documentElement.innerText" // gets text content
+      },
+      function(json) {
+        chrome.storage.local.set({ selected: json }); // places text content in extension local storage
+        alert("Copied Page!");
+      }
+    );
   });
 }
