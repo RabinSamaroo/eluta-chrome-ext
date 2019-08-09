@@ -13,7 +13,7 @@ Quickly copy and paste harvester configurations
 
 - Paste functionality improvments
   - change the way the harvesterID is passed for code structure
-  - set other fields to remove? 
+  - set other fields to remove?
   - add note?
 - partial paste
   - select what items to be pasted
