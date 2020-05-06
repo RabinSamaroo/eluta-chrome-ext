@@ -192,12 +192,6 @@ function ultipro_copy() {
   alert("Copied Ultipro! Watch out for internation locations");
 }
 
-function escape_quotes(string) {
-  //escapes quotes so the code string will not be cut off by a quote in the code
-  string = string.replace(/\"/g, '\\"');
-  string = string.replace(/\'/g, "\\'");
-  return string;
-}
 
 // Returns a string of code to be executed by the tab to inject the data
 // @param config is a json string of data
@@ -245,9 +239,9 @@ function inject_harvester_code(config, pasteURL) {
   // FIELDS WITH QUOTES => TEST URL, TEST P URL, PAT ID, PATURL, ITEM PARSER FIELDS
   // Test url
   code +=
-    'document.getElementsByName("test_url")[0].value="' +
-    escape_quotes(cfg.test_url) +
-    '";';
+    'document.getElementsByName("test_url")[0].value=String.raw`' +
+    cfg.test_url +
+    '`;';
 
   // Def sync
   code +=
@@ -256,11 +250,11 @@ function inject_harvester_code(config, pasteURL) {
     '";';
 
   // Test pager url
-  code += 'document.getElementsByName("test_pager_url")[0].value="';
+  code += 'document.getElementsByName("test_pager_url")[0].value=String.raw`';
   if (cfg.test_pager_url != null) {
-    code += escape_quotes(cfg.test_pager_url);
+    code += cfg.test_pager_url;
   }
-  code += '";';
+  code += '`;';
 
   // pager max #
   code +=
@@ -371,46 +365,46 @@ function inject_harvester_code(config, pasteURL) {
   code += '";';
 
   // Pattern ID
-  code += 'document.getElementsByName("id_regex")[0].value="';
+  code += 'document.getElementsByName("id_regex")[0].value=String.raw`';
   if (cfg.id_regex != null) {
-    code += escape_quotes(cfg.id_regex);
+    code += cfg.id_regex;
   }
-  code += '";';
+  code += '`;';
 
   // Pat. URL
-  code += 'document.getElementsByName("link_pattern")[0].value="';
+  code += 'document.getElementsByName("link_pattern")[0].value=String.raw`';
   if (cfg.link_pattern != null) {
-    code += escape_quotes(cfg.link_pattern);
+    code += cfg.link_pattern;
   }
-  code += '";';
+  code += '`;';
 
   // Row Reject
-  code += 'document.getElementsByName("list_reject")[0].value="';
+  code += 'document.getElementsByName("list_reject")[0].value=String.raw`';
   if (cfg.list_reject != null) {
-    code += escape_quotes(cfg.list_reject);
+    code += cfg.list_reject;
   }
-  code += '";';
+  code += '`;';
 
   // Row Require
-  code += 'document.getElementsByName("list_require")[0].value="';
+  code += 'document.getElementsByName("list_require")[0].value=String.raw`';
   if (cfg.list_require != null) {
-    code += escape_quotes(cfg.list_require);
+    code += cfg.list_require;
   }
-  code += '";';
+  code += '`;';
 
   // Page Reject
-  code += 'document.getElementsByName("list_page_require")[0].value="';
+  code += 'document.getElementsByName("list_page_require")[0].value=String.raw`';
   if (cfg.list_page_require != null) {
-    code += escape_quotes(cfg.list_page_require);
+    code += cfg.list_page_require;
   }
-  code += '";';
+  code += '`;';
 
   // Page Require
-  code += 'document.getElementsByName("list_page_reject")[0].value="';
+  code += 'document.getElementsByName("list_page_reject")[0].value=String.raw`';
   if (cfg.list_page_reject != null) {
-    code += escape_quotes(cfg.list_page_reject);
+    code += cfg.list_page_reject;
   }
-  code += '";';
+  code += '`;';
 
   // Item Parser
   code +=
@@ -432,32 +426,32 @@ function inject_harvester_code(config, pasteURL) {
   code += '";';
 
   // Pre Reject
-  code += 'document.getElementsByName("pre_parse_reject")[0].value="';
+  code += 'document.getElementsByName("pre_parse_reject")[0].value=String.raw`';
   if (cfg.pre_parse_reject != null) {
-    code += escape_quotes(cfg.pre_parse_reject);
+    code += cfg.pre_parse_reject;
   }
-  code += '";';
+  code += '`;';
 
   // Cookie URL
-  code += 'document.getElementsByName("cookie_req")[0].value="';
+  code += 'document.getElementsByName("cookie_req")[0].value=String.raw`';
   if (cfg.cookie_req != null) {
-    code += escape_quotes(cfg.cookie_req);
+    code += cfg.cookie_req;
   }
-  code += '";';
+  code += '`;';
 
   // Item Begin
-  code += 'document.getElementsByName("item_begin")[0].value="';
+  code += 'document.getElementsByName("item_begin")[0].value=String.raw`';
   if (cfg.item_begin != null) {
-    code += escape_quotes(cfg.item_begin);
+    code += cfg.item_begin;
   }
-  code += '";';
+  code += '`;';
 
   // Item End
-  code += 'document.getElementsByName("item_end")[0].value="';
+  code += 'document.getElementsByName("item_end")[0].value=String.raw`';
   if (cfg.item_end != null) {
-    code += escape_quotes(cfg.item_end);
+    code += cfg.item_end;
   }
-  code += '";';
+  code += '`;';
 
   // Notes
   // ITEM PARSER
@@ -481,18 +475,18 @@ function inject_harvester_code(config, pasteURL) {
       '";';
 
     // Begin
-    code += 'document.getElementsByName("' + itemPrefix + '~begin")[0].value="';
+    code += 'document.getElementsByName("' + itemPrefix + '~begin")[0].value=String.raw`';
     if (cfg.__itemdef[item].field_begin != null) {
-      code += escape_quotes(cfg.__itemdef[item].field_begin);
+      code += cfg.__itemdef[item].field_begin;
     }
-    code += '";';
+    code += '`;';
 
     // End
-    code += 'document.getElementsByName("' + itemPrefix + '~end")[0].value="';
+    code += 'document.getElementsByName("' + itemPrefix + '~end")[0].value=String.raw`';
     if (cfg.__itemdef[item].field_end != null) {
-      code += escape_quotes(cfg.__itemdef[item].field_end);
+      code += cfg.__itemdef[item].field_end;
     }
-    code += '";';
+    code += '`;';
 
     // Replace
     code +=
@@ -500,45 +494,45 @@ function inject_harvester_code(config, pasteURL) {
       itemPrefix +
       '~replace")[0].value=String.raw`';
     if (cfg.__itemdef[item].replace != null) {
-      code += escape_quotes(cfg.__itemdef[item].replace);
+      code += cfg.__itemdef[item].replace;
     }
     code += "`;";
 
     // Validate
     code +=
-      'document.getElementsByName("' + itemPrefix + '~validate")[0].value="';
+      'document.getElementsByName("' + itemPrefix + '~validate")[0].value=String.raw`';
     if (cfg.__itemdef[item].validate != null) {
-      code += escape_quotes(cfg.__itemdef[item].validate);
+      code += cfg.__itemdef[item].validate;
     }
-    code += '";';
+    code += '`;';
 
     // Remove
     code +=
-      'document.getElementsByName("' + itemPrefix + '~remove")[0].value="';
+      'document.getElementsByName("' + itemPrefix + '~remove")[0].value=String.raw`';
     if (cfg.__itemdef[item].remove != null) {
-      code += escape_quotes(cfg.__itemdef[item].remove);
+      code += cfg.__itemdef[item].remove;
     }
-    code += '";';
+    code += '`;';
 
     // Reject
     code +=
       'document.getElementsByName("' +
       itemPrefix +
-      '~terms_reject")[0].value="';
+      '~terms_reject")[0].value=String.raw`';
     if (cfg.__itemdef[item].terms_reject != null) {
-      code += escape_quotes(cfg.__itemdef[item].terms_reject);
+      code += cfg.__itemdef[item].terms_reject;
     }
-    code += '";';
+    code += '`;';
 
     // Reject
     code +=
       'document.getElementsByName("' +
       itemPrefix +
-      '~terms_require")[0].value="';
+      '~terms_require")[0].value=String.raw`';
     if (cfg.__itemdef[item].terms_require != null) {
-      code += escape_quotes(cfg.__itemdef[item].terms_require);
+      code += cfg.__itemdef[item].terms_require;
     }
-    code += '";';
+    code += '`;';
 
     //Var
     code +=
