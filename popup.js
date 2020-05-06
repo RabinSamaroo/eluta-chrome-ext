@@ -14,7 +14,12 @@ document
   .getElementById("ultipro-copy")
   .addEventListener("click", ultipro_copy, false);
 
+  document
+  .getElementById("adp-copy")
+  .addEventListener("click", adp_copy, false);
+
 var inputURL = document.getElementById("input-url");
+
 function rawHarvester() {
   return JSON.parse(`
 {
@@ -190,6 +195,80 @@ function ultipro_copy() {
   chrome.storage.local.set({ selected: JSON.stringify(ultiproHarv) });
 
   alert("Copied Ultipro! Watch out for internation locations");
+}
+
+function adp_copy() {
+  //get information from input
+  raw_url = inputURL.value + ':';
+  cid = raw_url.match(/[&?]cid=(.*?)[&%:]/is)[1];
+  ccid = raw_url.match(/ccid=(.*?)[&%:]/is)[1];
+  lang = raw_url.match(/lang=(.*?)[&%:]/is)[1];
+  console.log(cid);
+  console.log(ccid);
+  console.log(lang);
+
+  test_url = 'https://workforcenow.adp.com/mascsr/default/careercenter/public/events/staffing/v1/job-requisitions?cid=' + cid + '&ccId=' + ccid + '&lang=' + lang + '&selectedMenuKey=CurrentOpenings&$top=1000';
+  pager_url = 'https://workforcenow.adp.com/mascsr/default/careercenter/public/events/staffing/v1/job-requisitions?cid=' + cid + '&ccId=' + ccid + '&lang=' + lang + '&selectedMenuKey=CurrentOpenings&$skip=!#!&$top=1000'
+  pat_url = 'http://127.0.0.1:3333/js/render?url=https://workforcenow.adp.com/mascsr/default/mdf/recruitment/recruitment.html%3Fcid=' + cid + '%26ccid=' + ccid + '%26jobId=!#!%%26lang=' + lang + '%26source=tw&harvester_url=https://workforcenow.adp.com/mascsr/default/careercenter/public/events/staffing/v1/job-requisitions/!#!%3Fcid=' + cid + '%26timeStamp=1547213343340%26lang=' + lang + '%26ccId=' + ccid + '&wait_time=2000'
+
+
+  adpHarv = rawHarvester();
+  adpHarv.test_url = test_url;
+  adpHarv.test_pager_url = pager_url;
+  adpHarv.link_pattern = pat_url;
+
+  adpHarv.pager_offset = 0;
+  adpHarv.pager_step = 20;
+  adpHarv.jobid_column = 2;
+  adpHarv.joburl_column = 2;
+  adpHarv.position_title_column= 1;
+  adpHarv.id_regex = String.raw`(?is)"requisitionTitle":"(.*?)".*?"stringValue":"(.*?)"`;
+  adpHarv.list_parser = "singleregex";
+  adpHarv.pager_max = "SET";
+
+  descItem = rawItem();
+  descItem.harvester_field_id = 5;
+  descItem.field_begin =
+    String.raw`(?)"requisitionDescription":\s*?"`;
+  descItem.field_end = String.raw`","requisitionLocations`;
+  descItem.replace = String.raw`\u0026nbsp;=>[[[ ]]]||\u0026ldquo;=>"||\u0026rdquo;=>"||\u0026rsquo;=>'||\u0027=>'||\u0026amp;=>&||\u0026=>[[[ ]]]||\u0022=>[[[ ]]]||\u003E=>>||\u003C=><||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?si)<.*?>=>[[[ ]]]||(?)\\n=>[[[ ]]]||(?)\\t=>[[[ ]]]||(?)\[\[\[|\]\]\]=>||]]]=>||(?si)&lt;=><||(?si)&lt;=><||(?si)&lt;=><||(?si)&lt;=><||(?si)&lt;=><||(?si)&lt;=><||(?si)&lt;=><||(?si)&lt;=><||(?si)&lt;=><||(?si)&lt;=><||(?si)&lt;=><||(?si)&lt;=><||(?si)&lt;=><||(?si)&lt;=><||(?si)&lt;=><||(?si)&lt;=><||(?si)&lt;=><||(?si)&gt;=>>||(?si)&gt;=>>||(?si)&gt;=>>||(?si)&gt;=>>||(?si)&gt;=>>||(?si)&gt;=>>||(?si)&gt;=>>||(?si)&gt;=>>||(?si)&gt;=>>||(?si)&gt;=>>||(?si)&gt;=>>||(?si)&gt;=>>||(?si)&gt;=>>||(?)\\n=>[[[ ]]]||(?)\\t=>[[[ ]]]||(?)\[\[\[|\]\]\]=>||]]]=>||\"=>"||\u003d=>=||quot;=>"||(?is)<span.*?>=>||(?is)<span.*?>=>||(?is)<span.*?>=>||(?is)<p.*?>=>||</div>=>||</div>=>||(?is)<b.*?>=>`
+  adpHarv.__itemdef.push(descItem);
+
+  etypeItem = rawItem();
+  etypeItem.harvester_field_id = 27;
+  etypeItem.field_begin = String.raw`workLevelCode":{"shortName":"`;
+  etypeItem.field_end = String.raw`"`;
+  etypeItem.arbitrary = true;
+  etypeItem.variable = true;
+  adpHarv.__itemdef.push(etypeItem);
+
+  locationItem = rawItem();
+  locationItem.harvester_field_id = 9;
+  locationItem.field_begin = String.raw`(?)"cityName":\s*?"`;
+  locationItem.field_end = '"'
+  locationItem.arbitrary = true;
+  locationItem.variable = true;
+  adpHarv.__itemdef.push(locationItem);
+
+  etermItem = rawItem();
+  etermItem.harvester_field_id = 28;
+  etermItem.field_begin = String.raw`::column 1::`;
+  etermItem.field_end = '::.'
+  etermItem.arbitrary = true;
+  etermItem.variable = true;
+  adpHarv.__itemdef.push(etermItem);
+
+  salaryItem = rawItem();
+  salaryItem.harvester_field_id = 16;
+  salaryItem.field_begin = String.raw`"maximumRate":`;
+  salaryItem.field_end = '"'
+  salaryItem.arbitrary = true;
+  salaryItem.variable = true;
+  adpHarv.__itemdef.push(salaryItem);
+
+
+  chrome.storage.local.set({ selected: JSON.stringify(adpHarv) });
+  alert("Copied ADP!");
 }
 
 
