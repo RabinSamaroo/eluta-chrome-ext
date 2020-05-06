@@ -209,7 +209,7 @@ function adp_copy() {
 
   test_url = 'https://workforcenow.adp.com/mascsr/default/careercenter/public/events/staffing/v1/job-requisitions?cid=' + cid + '&ccId=' + ccid + '&lang=' + lang + '&selectedMenuKey=CurrentOpenings&$top=1000';
   pager_url = 'https://workforcenow.adp.com/mascsr/default/careercenter/public/events/staffing/v1/job-requisitions?cid=' + cid + '&ccId=' + ccid + '&lang=' + lang + '&selectedMenuKey=CurrentOpenings&$skip=!#!&$top=1000'
-  pat_url = 'http://127.0.0.1:3333/js/render?url=https://workforcenow.adp.com/mascsr/default/mdf/recruitment/recruitment.html%3Fcid=' + cid + '%26ccid=' + ccid + '%26jobId=!#!%%26lang=' + lang + '%26source=tw&harvester_url=https://workforcenow.adp.com/mascsr/default/careercenter/public/events/staffing/v1/job-requisitions/!#!%3Fcid=' + cid + '%26timeStamp=1547213343340%26lang=' + lang + '%26ccId=' + ccid + '&wait_time=2000'
+  pat_url = 'http://127.0.0.1:3333/js/render?url=https://workforcenow.adp.com/mascsr/default/mdf/recruitment/recruitment.html%3Fcid=' + cid + '%26ccid=' + ccid + '%26jobId=!#!%26lang=' + lang + '%26source=tw&harvester_url=https://workforcenow.adp.com/mascsr/default/careercenter/public/events/staffing/v1/job-requisitions/!#!%3Fcid=' + cid + '%26timeStamp=1547213343340%26lang=' + lang + '%26ccId=' + ccid + '&wait_time=2000'
 
 
   adpHarv = rawHarvester();
