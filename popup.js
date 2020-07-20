@@ -23,6 +23,10 @@ document
   .getElementById("taleo-business-copy")
   .addEventListener("click", taleo_business_copy, false);
 
+document
+  .getElementById("dayforce-copy")
+  .addEventListener("click", dayforce_copy, false);
+
   
 var inputURL = document.getElementById("input-url");
 
@@ -102,6 +106,166 @@ function rawItem() {
       "field_column": null
     }
 `);
+}
+
+function dayforce_copy() {
+  url = inputURL.value;
+  page_url = url + "?page=!#!";
+  dayforceHarv = {
+    "cookie_req": null,
+    "position_title_column": 3,
+    "pager_max": 11,
+    "max_row_errors": 0,
+    "list_table_number": null,
+    "harvester_active": false,
+    "item_begin": null,
+    "list_begin": null,
+    "pager_offset": 1,
+    "__cursor": "<elutalib.zopedbapi.zcursor object at 0x7f49fa80f410>",
+    "__farmID": 24583,
+    "pre_parse_reject": null,
+    "harvester_ts": "2020/07/19 14:28:23.957097 GMT-4",
+    "list_page_reject": null,
+    "header_idstr": null,
+    "list_expect": null,
+    "list_parser": "singleregex",
+    "harvester_id": 24583,
+    "farm_id": 24583,
+    "jobid_column": 2,
+    "list_require": null,
+    "harvester_notes": null,
+    "__farmerID": null,
+    "pager_url": page_url,
+    "link_pattern": null,
+    "ignore_duplicate_urls": false,
+    "id_regex": "(?si)\"posting-title\">.*?href=\"(.*?/View/([^\"]+)).*?>([^<]+).*?<div class=\"location\">(.*?)<",
+    "harvester_name": "dayforce test1",
+    "list_end": null,
+    "harvester_debug": false,
+    "item_parser": "stream",
+    "list_columns": "joburl:1 jobid:2 position_title:3 location:4",
+    "header_rows": 1,
+    "__itemdef": [
+      {
+        "field_begin": "\"job-location\">",
+        "terms_require": "",
+        "harvester_item_id": 100755,
+        "deleted": false,
+        "terms_reject": "",
+        "harvester_id": 24583,
+        "arbitrary": false,
+        "remove": "",
+        "replace": "",
+        "field": "location",
+        "field_end": "<",
+        "harvester_field_label": "Location",
+        "harvester_field_handled": true,
+        "variable": false,
+        "position": 10,
+        "validate": "",
+        "harvester_field_id": 9,
+        "field_column": null
+      },
+      {
+        "field_begin": "\"job-posting-section\">",
+        "terms_require": "",
+        "harvester_item_id": 100756,
+        "deleted": false,
+        "terms_reject": "",
+        "harvester_id": 24583,
+        "arbitrary": false,
+        "remove": "",
+        "replace": "",
+        "field": "index_text",
+        "field_end": "<div class=\"job-posting-content locations\">",
+        "harvester_field_label": "Description",
+        "harvester_field_handled": true,
+        "variable": false,
+        "position": 20,
+        "validate": "",
+        "harvester_field_id": 5,
+        "field_column": null
+      },
+      {
+        "field_begin": "\"job-posting-section\">",
+        "terms_require": "",
+        "harvester_item_id": 100757,
+        "deleted": false,
+        "terms_reject": "",
+        "harvester_id": 24583,
+        "arbitrary": true,
+        "remove": "",
+        "replace": "<re (?si)^(?:(?!part time|part-time).)*$>=>full time",
+        "field": "employment_type",
+        "field_end": "<div class=\"job-posting-content locations\">",
+        "harvester_field_label": "Employment Type",
+        "harvester_field_handled": true,
+        "variable": true,
+        "position": 30,
+        "validate": "(?i).*?(?P<employment_type>(?:full|part|temps?).{0,5}(?:time|plein|partiel)).*|.*",
+        "harvester_field_id": 27,
+        "field_column": null
+      },
+      {
+        "field_begin": "::column 3::",
+        "terms_require": "",
+        "harvester_item_id": 100758,
+        "deleted": false,
+        "terms_reject": "",
+        "harvester_id": 24583,
+        "arbitrary": true,
+        "remove": "",
+        "replace": "",
+        "field": "employment_term",
+        "field_end": "::.",
+        "harvester_field_label": "Employment Term",
+        "harvester_field_handled": true,
+        "variable": true,
+        "position": 40,
+        "validate": "(?i).*?(?P<employment_term>\\s*(?:intern|internship|co.{0,3}op|seasonal|interne|coop.rative|saisonnier|summer|etudiant)\\s*).*|.*",
+        "harvester_field_id": 28,
+        "field_column": null
+      },
+      {
+        "field_begin": "::column 3::",
+        "terms_require": "",
+        "harvester_item_id": 100759,
+        "deleted": false,
+        "terms_reject": "",
+        "harvester_id": 24583,
+        "arbitrary": true,
+        "remove": "",
+        "replace": "(?is)intern|internship|co.{0,3}op|interne|coop.rative|etudiant|junior=>entry-level",
+        "field": "experience",
+        "field_end": "::.",
+        "harvester_field_label": "Experience",
+        "harvester_field_handled": true,
+        "variable": true,
+        "position": 50,
+        "validate": "",
+        "harvester_field_id": 26,
+        "field_column": null
+      }
+    ],
+    "list_page_require": null,
+    "harvester_update_ts": "2020/07/19 10:57:27.602587 GMT+0",
+    "location_column": 4,
+    "parent_harvester_id": null,
+    "joburl_column": 1,
+    "list_type": 2,
+    "harvester_sync_mode_id": 0,
+    "test_pager_url": page_url,
+    "test_url": url,
+    "item_end": null,
+    "pager_step": 1,
+    "url": url,
+    "list_filter": null,
+    "unique_months": 0,
+    "list_reject": null,
+    "default_harvester_sync_mode_id": 0
+  }
+  chrome.storage.local.set({ selected: JSON.stringify(dayforceHarv) });
+  alert("Copied Dayforce");
 }
 
 function taleo_business_copy() {
@@ -186,7 +350,7 @@ function taleo_business_copy() {
         "field_column": null
       },
       {
-        "field_begin": "taleo:location",
+        "field_begin": "taleo:locationCity",
         "terms_require": "",
         "harvester_item_id": 91268,
         "deleted": false,
@@ -196,7 +360,7 @@ function taleo_business_copy() {
         "remove": "",
         "replace": "",
         "field": "location",
-        "field_end": "taleo:location",
+        "field_end": "taleo:locationCity",
         "harvester_field_label": "Location",
         "harvester_field_handled": true,
         "variable": false,
