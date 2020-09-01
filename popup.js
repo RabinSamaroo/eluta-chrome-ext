@@ -27,6 +27,10 @@ document
   .getElementById("dayforce-copy")
   .addEventListener("click", dayforce_copy, false);
 
+  document
+  .getElementById("taleo-copy")
+  .addEventListener("click", taleo_copy, false);
+
   
 var inputURL = document.getElementById("input-url");
 
@@ -268,6 +272,231 @@ function dayforce_copy() {
   alert("Copied Dayforce");
 }
 
+//with some 3 character type url
+function taleo_copy() {
+  raw_url = inputURL.value;
+  rss_url = raw_url.match(/.*?\/ats\//is)[0];
+  rss_url += 'servlet/Rss';
+  rss_url += raw_url.match(/\?.*?$/is);
+  console.log(rss_url);
+
+  taleoHarv = {
+    "cookie_req": null,
+    "__farmerID": null,
+    "pager_max": 1,
+    "max_row_errors": 0,
+    "list_table_number": null,
+    "harvester_active": false,
+    "item_begin": null,
+    "list_begin": "<item>",
+    "pager_offset": 1,
+    "__cursor": "<elutalib.zopedbapi.zcursor object at 0x7f60a9a83fd0>",
+    "__farmID": 22898,
+    "pre_parse_reject": null,
+    "harvester_ts": "2020/09/01 01:56:18.841051 GMT-4",
+    "list_page_reject": null,
+    "header_idstr": null,
+    "list_expect": null,
+    "list_parser": "singlejobspage",
+    "harvester_id": 22898,
+    "farm_id": 22898,
+    "jobid_column": 2,
+    "list_require": null,
+    "harvester_notes": "",
+    "pager_url": null,
+    "link_pattern": null,
+    "ignore_duplicate_urls": false,
+    "id_regex": "(?is)<link>(.*?)<.*?<taleo:reqId>(.*?)<",
+    "harvester_name": "R taleo RSS generic",
+    "list_end": "</item>",
+    "harvester_debug": false,
+    "item_parser": "xml",
+    "list_columns": "joburl:1 jobid:2",
+    "header_rows": 1,
+    "__itemdef": [
+      {
+        "field_begin": "title",
+        "terms_require": "",
+        "harvester_item_id": 91266,
+        "deleted": false,
+        "terms_reject": "bank of candidates||Banque de candidature",
+        "harvester_id": 22898,
+        "arbitrary": false,
+        "remove": "",
+        "replace": "",
+        "field": "position_title",
+        "field_end": "title",
+        "harvester_field_label": "Position Title",
+        "harvester_field_handled": true,
+        "variable": false,
+        "position": 10,
+        "validate": "",
+        "harvester_field_id": 13,
+        "field_column": null
+      },
+      {
+        "field_begin": "pubDate",
+        "terms_require": "",
+        "harvester_item_id": 91267,
+        "deleted": false,
+        "terms_reject": "",
+        "harvester_id": 22898,
+        "arbitrary": true,
+        "remove": "",
+        "replace": "",
+        "field": "published_ts",
+        "field_end": "pubDate",
+        "harvester_field_label": "Date Posted",
+        "harvester_field_handled": false,
+        "variable": true,
+        "position": 20,
+        "validate": "",
+        "harvester_field_id": 4,
+        "field_column": null
+      },
+      {
+        "field_begin": "taleo:location",
+        "terms_require": "",
+        "harvester_item_id": 91268,
+        "deleted": false,
+        "terms_reject": "",
+        "harvester_id": 22898,
+        "arbitrary": true,
+        "remove": "",
+        "replace": "",
+        "field": "location",
+        "field_end": "taleo:location",
+        "harvester_field_label": "Location",
+        "harvester_field_handled": true,
+        "variable": false,
+        "position": 30,
+        "validate": "",
+        "harvester_field_id": 9,
+        "field_column": null
+      },
+      {
+        "field_begin": "taleo:locationState",
+        "terms_require": "",
+        "harvester_item_id": 91269,
+        "deleted": false,
+        "terms_reject": "",
+        "harvester_id": 22898,
+        "arbitrary": true,
+        "remove": "",
+        "replace": "",
+        "field": "province_name",
+        "field_end": "taleo:locationState",
+        "harvester_field_label": "Province Name",
+        "harvester_field_handled": false,
+        "variable": true,
+        "position": 40,
+        "validate": "",
+        "harvester_field_id": 10,
+        "field_column": null
+      },
+      {
+        "field_begin": "taleo:locationCountry",
+        "terms_require": "CA",
+        "harvester_item_id": 91270,
+        "deleted": false,
+        "terms_reject": "",
+        "harvester_id": 22898,
+        "arbitrary": true,
+        "remove": "",
+        "replace": "",
+        "field": "country_code",
+        "field_end": "taleo:locationCountry",
+        "harvester_field_label": "Country Code",
+        "harvester_field_handled": false,
+        "variable": true,
+        "position": 50,
+        "validate": "",
+        "harvester_field_id": 12,
+        "field_column": null
+      },
+      {
+        "field_begin": "taleo:html-description",
+        "terms_require": "",
+        "harvester_item_id": 91271,
+        "deleted": false,
+        "terms_reject": "",
+        "harvester_id": 22898,
+        "arbitrary": true,
+        "remove": "",
+        "replace": "",
+        "field": "index_text",
+        "field_end": "taleo:html-description",
+        "harvester_field_label": "Description",
+        "harvester_field_handled": true,
+        "variable": true,
+        "position": 60,
+        "validate": "",
+        "harvester_field_id": 5,
+        "field_column": null
+      },
+      {
+        "field_begin": "taleo:html-description",
+        "terms_require": "",
+        "harvester_item_id": 91272,
+        "deleted": false,
+        "terms_reject": "",
+        "harvester_id": 22898,
+        "arbitrary": true,
+        "remove": "",
+        "replace": "<re (?si)^(?:(?!part time|part-time|partiel).)*$>=>full time",
+        "field": "employment_type",
+        "field_end": "taleo:html-description",
+        "harvester_field_label": "Employment Type",
+        "harvester_field_handled": true,
+        "variable": true,
+        "position": 70,
+        "validate": "(?i).*?(?P<employment_type>(?:full|part|temps?).{0,5}(?:time|plein|partiel)).*|.*",
+        "harvester_field_id": 27,
+        "field_column": null
+      },
+      {
+        "field_begin": "title",
+        "terms_require": "",
+        "harvester_item_id": 91288,
+        "deleted": false,
+        "terms_reject": "",
+        "harvester_id": 22898,
+        "arbitrary": true,
+        "remove": "",
+        "replace": "junior high=>ignore||interne=>ignore||internes=>ignore||Internet=>ignore||summer intern=>co-op entry-level||internal=>ignore||international=>ignore||new graduate=>entry-level||(?si)new grads?=>entry-level||junior=>entry-level||apprentice=>entry-level||co-op=>entry-level intern||student=>entry-level co-op||in training=>entry-level||intern =>entry-level co-op||internship=>entry-level co-op||trainee=>entry-level||in-training=>entry-level||Stagiaire=>entry-level intern||\u00c9tudiant=>entry-level co-op||Apprenti=>entry-level||Stage=>intern entry-level||Stagiaire=>intern entry-level",
+        "field": "experience",
+        "field_end": "title",
+        "harvester_field_label": "Experience",
+        "harvester_field_handled": true,
+        "variable": true,
+        "position": 80,
+        "validate": "(?i).*?(?P<employment_term>\\s*(?:intern|internship|co.{0,3}op|seasonal|interne|coop.rative|saisonnier|summer|etudiant)\\s*).*|.*",
+        "harvester_field_id": 26,
+        "field_column": null
+      }
+    ],
+    "list_page_require": null,
+    "harvester_update_ts": "2019/07/19 10:25:28.413146 GMT+0",
+    "parent_harvester_id": null,
+    "joburl_column": 1,
+    "list_type": 2,
+    "harvester_sync_mode_id": 0,
+    "test_pager_url": null,
+    "test_url": rss_url,
+    "item_end": null,
+    "pager_step": 1,
+    "url": rss_url,
+    "list_filter": null,
+    "unique_months": 0,
+    "list_reject": null,
+    "default_harvester_sync_mode_id": 0
+  };
+
+  chrome.storage.local.set({ selected: JSON.stringify(taleoHarv) });
+  alert("Copied Taleo!")
+}
+
+//business with subdomain
 function taleo_business_copy() {
   raw_url = inputURL.value;
   org = raw_url.match(/org=(.*?)[&]|org=(.*?)$/is)[1]
@@ -497,7 +726,7 @@ function workday_copy() {
   url = raw_url.match(/https?:\/\/.*?\/.*?\//)[0]; //make this fault tolerent for .com/en-us/external
   pat_url = url + "job/!#!#accept:application/json";
   url =
-    "http://127.0.0.1:3333/js/render?url=" +
+    "" +
     url +
     "fs/searchPagination/318c8bb6f553100021d223d9780d30be/";
   pager_url = url + "!#!";
